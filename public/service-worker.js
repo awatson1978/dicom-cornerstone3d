@@ -69,38 +69,38 @@ self.addEventListener('fetch', function(event) {
   }
   
   event.respondWith(
-    caches.open(RUNTIME_CACHE)
-      .then(function(cache) {
-        return cache.match(event.request)
-          .then(function(response) {
-            if (response) {
-              // Serve from cache
-              return response;
-            }
+    // caches.open(RUNTIME_CACHE)
+    //   .then(function(cache) {
+    //     return cache.match(event.request)
+    //       .then(function(response) {
+    //         if (response) {
+    //           // Serve from cache
+    //           return response;
+    //         }
             
-            // Fetch from network and cache
-            return fetch(event.request)
-              .then(function(response) {
-                // Only cache successful responses
-                if (response && response.status === 200 && response.type === 'basic') {
-                  const responseToCache = response.clone();
-                  cache.put(event.request, responseToCache);
-                }
-                return response;
-              })
-              .catch(function(error) {
-                console.log('[SW] Fetch failed:', error);
+    //         // Fetch from network and cache
+    //         return fetch(event.request)
+    //           .then(function(response) {
+    //             // Only cache successful responses
+    //             if (response && response.status === 200 && response.type === 'basic') {
+    //               const responseToCache = response.clone();
+    //               cache.put(event.request, responseToCache);
+    //             }
+    //             return response;
+    //           })
+    //           .catch(function(error) {
+    //             console.log('[SW] Fetch failed:', error);
                 
-                // Return offline page for navigation requests
-                if (event.request.mode === 'navigate') {
-                  return caches.match('/');
-                }
+    //             // Return offline page for navigation requests
+    //             if (event.request.mode === 'navigate') {
+    //               return caches.match('/');
+    //             }
                 
-                throw error;
-              });
-          });
-      })
-  );
+    //             throw error;
+    //           });
+    //       });
+    //     })
+    // );
 });
 
 // Background sync for failed uploads
