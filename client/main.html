@@ -1,0 +1,63 @@
+<head>
+  <title>DICOM Viewer v3</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="High-performance DICOM viewer built with Meteor v3, React, and Cornerstone3D">
+  <meta name="theme-color" content="#1976d2">
+  
+  <!-- PWA Support -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+  
+  <!-- Preload WebAssembly -->
+  <link rel="preload" href="/wasm/cornerstoneWADOImageLoader/cornerstoneWADOImageLoaderWebWorker.min.js" as="script">
+  <link rel="preload" href="/wasm/dicom-parser/dicomParser.min.js" as="script">
+  
+  <!-- Medical Imaging Optimizations -->
+  <meta name="color-scheme" content="dark light">
+  <style>
+    /* Prevent text selection during medical image interaction */
+    .dicom-viewer {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+    
+    /* Optimize for high-DPI medical displays */
+    canvas {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    
+    /* Loading styles */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1e1e1e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="react-target">
+    <div class="loading-screen">
+      <div style="text-align: center;">
+        <div style="font-size: 24px; margin-bottom: 16px;">🏥</div>
+        <div style="font-size: 18px; margin-bottom: 8px;">DICOM Viewer v3</div>
+        <div style="font-size: 14px; opacity: 0.7;">Loading medical imaging engine...</div>
+      </div>
+    </div>
+  </div>
+</body>

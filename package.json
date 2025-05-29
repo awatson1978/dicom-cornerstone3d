@@ -1,0 +1,32 @@
+{
+  "name": "dicom-cornerstone3d",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.23.5",
+    "@cornerstonejs/codec-charls": "^1.2.3",
+    "@cornerstonejs/codec-libjpeg-turbo-8bit": "^1.2.2",
+    "@cornerstonejs/codec-openjpeg": "^1.2.4",
+    "@cornerstonejs/codec-openjph": "^2.4.7",
+    "@cornerstonejs/core": "^0.3.0",
+    "@cornerstonejs/dicom-image-loader": "^0.1.5",
+    "@cornerstonejs/tools": "^0.5.0",
+    "dicom-parser": "^1.8.21",
+    "idb": "^8.0.3",
+    "meteor-node-stubs": "^1.2.7",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.jsx",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  }
+}
