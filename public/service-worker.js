@@ -1,167 +1,117 @@
+import { Meteor } from 'meteor/meteor';
+
 /**
- * Service Worker for DICOM Viewer v3
- * Provides offline caching and background sync
+ * Service worker setup for PWA features and DICOM caching
+ * TEMPORARILY DISABLED FOR DEBUGGING
  */
 
-const CACHE_NAME = 'dicom-viewer-v3-cache-v1';
-const RUNTIME_CACHE = 'dicom-viewer-v3-runtime-v1';
+let serviceWorkerRegistration = null;
 
-// Files to cache immediately
-const PRECACHE_URLS = [
-  '/',
-  '/manifest.json',
-];
-
-// Install event - cache essential files
-self.addEventListener('install', function(event) {
-  console.log('[SW] Installing service worker...');
-  
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('[SW] Precaching app shell');
-        return cache.addAll(PRECACHE_URLS);
-      })
-      .then(function() {
-        console.log('[SW] Service worker installed');
-        return self.skipWaiting();
-      })
-  );
-});
-
-// Activate event - clean up old caches
-self.addEventListener('activate', function(event) {
-  console.log('[SW] Activating service worker...');
-  
-  event.waitUntil(
-    caches.keys()
-      .then(function(cacheNames) {
-        return Promise.all(
-          cacheNames
-            .filter(function(cacheName) {
-              return cacheName.startsWith('dicom-viewer-v3-') && 
-                     cacheName !== CACHE_NAME && 
-                     cacheName !== RUNTIME_CACHE;
-            })
-            .map(function(cacheName) {
-              console.log('[SW] Deleting old cache:', cacheName);
-              return caches.delete(cacheName);
-            })
-        );
-      })
-      .then(function() {
-        console.log('[SW] Service worker activated');
-        return self.clients.claim();
-      })
-  );
-});
-
-// Fetch event - serve from cache, fallback to network
-self.addEventListener('fetch', function(event) {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
-  
-  // Skip DICOM file requests (too large for cache)
-  if (event.request.url.includes('/api/dicom/files/')) {
-    return;
-  }
-  
-  event.respondWith(
-    // caches.open(RUNTIME_CACHE)
-    //   .then(function(cache) {
-    //     return cache.match(event.request)
-    //       .then(function(response) {
-    //         if (response) {
-    //           // Serve from cache
-    //           return response;
-    //         }
-            
-    //         // Fetch from network and cache
-    //         return fetch(event.request)
-    //           .then(function(response) {
-    //             // Only cache successful responses
-    //             if (response && response.status === 200 && response.type === 'basic') {
-    //               const responseToCache = response.clone();
-    //               cache.put(event.request, responseToCache);
-    //             }
-    //             return response;
-    //           })
-    //           .catch(function(error) {
-    //             console.log('[SW] Fetch failed:', error);
-                
-    //             // Return offline page for navigation requests
-    //             if (event.request.mode === 'navigate') {
-    //               return caches.match('/');
-    //             }
-                
-    //             throw error;
-    //           });
-    //       });
-    //     })
-    // );
-});
-
-// Background sync for failed uploads
-self.addEventListener('sync', function(event) {
-  if (event.tag === 'dicom-upload') {
-    console.log('[SW] Background sync: dicom-upload');
-    
-    event.waitUntil(
-      // Handle background upload sync
-      retryFailedUploads()
-    );
-  }
-});
-
-// Message handler for cache management
-self.addEventListener('message', function(event) {
-  if (event.data && event.data.type) {
-    switch (event.data.type) {
-      case 'SKIP_WAITING':
-        self.skipWaiting();
-        break;
-        
-      case 'CACHE_URLS':
-        event.waitUntil(
-          caches.open(RUNTIME_CACHE)
-            .then(function(cache) {
-              return cache.addAll(event.data.payload);
-            })
-        );
-        break;
-        
-      case 'CLEAR_CACHE':
-        event.waitUntil(
-          caches.keys()
-            .then(function(cacheNames) {
-              return Promise.all(
-                cacheNames.map(function(cacheName) {
-                  return caches.delete(cacheName);
-                })
-              );
-            })
-        );
-        break;
+/**
+ * Register service worker for offline support and caching
+ */
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      console.log('📦 Service worker registration DISABLED for debugging');
+      return null;
+      
+      // COMMENTED OUT FOR DEBUGGING:
+      // console.log('📦 Registering service worker...');
+      // 
+      // const registration = await navigator.serviceWorker.register('/service-worker.js', {
+      //   scope: '/',
+      // });
+      // 
+      // serviceWorkerRegistration = registration;
+      // 
+      // console.log('✅ Service worker registered successfully');
+      // 
+      // // Listen for updates
+      // registration.addEventListener('updatefound', function() {
+      //   const newWorker = registration.installing;
+      //   
+      //   newWorker.addEventListener('statechange', function() {
+      //     if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+      //       console.log('🔄 New service worker available - refresh to update');
+      //       // Could show user notification here
+      //     }
+      //   });
+      // });
+      // 
+      // return registration;
+      
+    } catch (error) {
+      console.error('❌ Service worker registration failed:', error);
+      return null;
     }
-  }
-});
-
-/**
- * Retry failed DICOM uploads
- */
-async function retryFailedUploads() {
-  try {
-    // TODO: Implement retry logic for failed uploads
-    console.log('[SW] Retrying failed uploads...');
-    
-    // This would typically:
-    // 1. Get failed uploads from IndexedDB
-    // 2. Retry uploading them
-    // 3. Update status in IndexedDB
-    
-  } catch (error) {
-    console.error('[SW] Error retrying uploads:', error);
+  } else {
+    console.log('📦 Service workers not supported');
+    return null;
   }
 }
+
+/**
+ * Unregister service worker
+ */
+async function unregisterServiceWorker() {
+  if (serviceWorkerRegistration) {
+    try {
+      await serviceWorkerRegistration.unregister();
+      console.log('🗑️ Service worker unregistered');
+    } catch (error) {
+      console.error('Error unregistering service worker:', error);
+    }
+  }
+}
+
+/**
+ * Check if app is running from cache (offline)
+ */
+function isOffline() {
+  return !navigator.onLine;
+}
+
+/**
+ * Get service worker registration
+ */
+export function getServiceWorkerRegistration() {
+  return serviceWorkerRegistration;
+}
+
+/**
+ * Check if service worker is available
+ */
+export function isServiceWorkerSupported() {
+  return 'serviceWorker' in navigator;
+}
+
+// Initialize service worker when module loads
+Meteor.startup(async function() {
+  const settings = Meteor.settings.public;
+  const enableServiceWorker = false; // TEMPORARILY DISABLED
+  // const enableServiceWorker = settings?.pwa?.enableServiceWorker !== false;
+  
+  if (enableServiceWorker) {
+    // Delay registration to avoid blocking app startup
+    setTimeout(async function() {
+      await registerServiceWorker();
+    }, 2000);
+  } else {
+    console.log('📦 Service worker disabled for debugging');
+  }
+  
+  // Listen for online/offline events
+  window.addEventListener('online', function() {
+    console.log('🌐 App is online');
+  });
+  
+  window.addEventListener('offline', function() {
+    console.log('📴 App is offline');
+  });
+});
+
+// Cleanup on unload
+window.addEventListener('beforeunload', function() {
+  // Could perform cleanup here if needed
+});
