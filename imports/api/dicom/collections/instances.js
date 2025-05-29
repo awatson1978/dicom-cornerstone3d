@@ -1,5 +1,5 @@
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 
 /**
  * Instances collection for DICOM instance metadata

@@ -1,5 +1,5 @@
 import { Mongo } from 'meteor/mongo';
-import { check } from 'meteor/check';
+import { check, Match } from 'meteor/check';
 
 /**
  * User sessions collection for tracking viewer state

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Tracker } from 'meteor/tracker';
 import { get, set } from 'lodash';
 
 // Create context
@@ -118,8 +119,9 @@ export function DicomProvider({ children }) {
         });
       });
       
-      // Get studies from collection
-      const studies = Studies.find({}, { sort: { studyDate: -1 } }).fetch();
+      // Get studies from collection (placeholder - will need actual collection)
+      // For now, return empty array until collections are properly set up
+      const studies = [];
       
       dispatch({ type: DICOM_ACTIONS.SET_STUDIES, payload: studies });
       
