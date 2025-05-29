@@ -1,49 +1,56 @@
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 
-// Startup imports
-import '/imports/startup/server';
+console.log('🔍 [SERVER DEBUG] Step 1: Basic Meteor server imports successful');
+console.log('🔍 [SERVER DEBUG] Meteor object:', typeof Meteor);
+console.log('🔍 [SERVER DEBUG] WebApp object:', typeof WebApp);
+console.log('🔍 [SERVER DEBUG] Meteor.isServer:', Meteor.isServer);
 
-// API imports
-import '/imports/api/dicom/server';
-import '/imports/api/users/methods';
-import '/imports/api/users/publications';
+// Step 1: Comment out ALL application imports to test basic Meteor functionality
+// COMMENTED OUT FOR DEBUGGING:
+// import '/imports/startup/server';
+// import '/imports/api/dicom/server';
+// import '/imports/api/users/methods';
+// import '/imports/api/users/publications';
+
+console.log('🔍 [SERVER DEBUG] Testing Mongo import...');
+try {
+  const { Mongo } = require('meteor/mongo');
+  console.log('🔍 [SERVER DEBUG] Mongo import successful:', typeof Mongo);
+  console.log('🔍 [SERVER DEBUG] Mongo.Collection available:', typeof Mongo.Collection);
+} catch (error) {
+  console.error('🔍 [SERVER DEBUG] Mongo import failed:', error);
+}
+
+console.log('🔍 [SERVER DEBUG] Testing basic Node modules...');
+try {
+  const lodash = require('lodash');
+  console.log('🔍 [SERVER DEBUG] Lodash available:', typeof lodash.get);
+} catch (error) {
+  console.error('🔍 [SERVER DEBUG] Lodash import failed:', error);
+}
 
 Meteor.startup(async function() {
-  console.log('🏥 DICOM Viewer v3 Server Starting...');
+  console.log('🔍 [SERVER DEBUG] Meteor.startup callback executing...');
+  console.log('🔍 [SERVER DEBUG] Server startup successful');
   
-  // Log configuration
+  // Test basic Meteor.settings access
   const settings = Meteor.settings;
-  console.log('📊 Configuration:');
-  console.log(`   - Memory Limit: ${settings.public?.dicom?.memoryLimit || '512MB'}`);
-  console.log(`   - Prefetch Strategy: ${settings.public?.dicom?.prefetchStrategy || 'balanced'}`);
-  console.log(`   - GPU Acceleration: ${settings.public?.dicom?.enableGPU ? 'enabled' : 'disabled'}`);
-  console.log(`   - Worker Count: ${settings.public?.dicom?.workerCount || 4}`);
-  console.log(`   - Cache Size: ${settings.public?.cache?.maxSizeMB || 2048}MB`);
+  console.log('🔍 [SERVER DEBUG] Settings available:', !!settings);
+  console.log('🔍 [SERVER DEBUG] Settings.public:', !!settings?.public);
+  console.log('🔍 [SERVER DEBUG] Settings.private:', !!settings?.private);
   
-  // Setup CORS for binary data endpoints
-  if (settings.private?.cors?.enable) {
-    WebApp.rawConnectHandlers.use('/api/dicom', function(req, res, next) {
-      const allowedOrigins = settings.private.cors.origin.split(',');
-      const origin = req.headers.origin;
-      
-      if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-      }
-      
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-      
-      if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        res.end();
-        return;
-      }
-      
-      next();
-    });
-  }
+  // Test basic WebApp functionality
+  console.log('🔍 [SERVER DEBUG] Setting up test HTTP route...');
+  WebApp.connectHandlers.use('/debug', function(req, res, next) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'Server debug mode active',
+      timestamp: new Date().toISOString(),
+      meteor: 'working'
+    }));
+  });
   
-  console.log('✅ DICOM Viewer v3 Server Ready');
+  console.log('🔍 [SERVER DEBUG] Test route available at /debug');
+  console.log('✅ [SERVER DEBUG] Basic server functionality confirmed');
 });

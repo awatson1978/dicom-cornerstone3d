@@ -1,31 +1,51 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
 import { Meteor } from 'meteor/meteor';
 
-// Startup imports
-import '/imports/startup/client';
+console.log('🔍 [DEBUG] Step 2: Testing startup imports...');
 
-// Main App component
-import App from '/imports/ui/App';
+// Step 2: Add back startup imports one at a time
+try {
+  console.log('🔍 [DEBUG] Importing startup/client...');
+  import('/imports/startup/client').then(function() {
+    console.log('🔍 [DEBUG] ✅ startup/client imported successfully');
+  }).catch(function(error) {
+    console.error('🔍 [DEBUG] ❌ startup/client import failed:', error);
+  });
+} catch (error) {
+  console.error('🔍 [DEBUG] ❌ startup/client sync import failed:', error);
+}
+
+// STILL COMMENTED OUT:
+// import App from '/imports/ui/App';
+
+console.log('🔍 [DEBUG] About to test React imports...');
+
+try {
+  const React = require('react');
+  console.log('🔍 [DEBUG] React import successful:', typeof React);
+  
+  const ReactDOM = require('react-dom/client');
+  console.log('🔍 [DEBUG] ReactDOM import successful:', typeof ReactDOM);
+} catch (error) {
+  console.error('🔍 [DEBUG] React import failed:', error);
+}
 
 Meteor.startup(function() {
-  console.log('🏥 DICOM Viewer v3 Client Starting...');
+  console.log('🔍 [DEBUG] Meteor.startup callback executing...');
   
-  // Log client configuration
-  const settings = Meteor.settings.public || {};
-  console.log('📊 Client Configuration:');
-  console.log(`   - App: ${settings.appName || 'DICOM Viewer v3'} v${settings.version || '1.0.0'}`);
-  console.log(`   - Memory Limit: ${settings.dicom?.memoryLimit || '512MB'}`);
-  console.log(`   - GPU Acceleration: ${settings.dicom?.enableGPU ? 'enabled' : 'disabled'}`);
-  console.log(`   - Performance Monitoring: ${settings.performance?.enableMonitoring ? 'enabled' : 'disabled'}`);
-  
-  // Mount React app
+  // Simple test render
   const container = document.getElementById('react-target');
   if (container) {
-    const root = createRoot(container);
-    root.render(React.createElement(App));
-    console.log('✅ DICOM Viewer v3 Client Ready');
-  } else {
-    console.error('❌ React mount point not found');
+    console.log('🔍 [DEBUG] React target container found');
+    container.innerHTML = `
+      <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: #1e1e1e; color: white; text-align: center;">
+        <div>
+          <h2>🔍 DEBUG MODE - Step 2</h2>
+          <p>Testing startup imports</p>
+          <p>Check console for import results</p>
+          <p style="font-size: 12px;">Looking for startup import success/failure</p>
+        </div>
+      </div>
+    `;
+    console.log('🔍 [DEBUG] Step 2 HTML rendered successfully');
   }
 });

@@ -55,6 +55,7 @@
     "prettier": "^3.2.5"
   },
   "meteor": {
+    "modern": true,
     "mainModule": {
       "client": "client/main.jsx",
       "server": "server/main.js"
