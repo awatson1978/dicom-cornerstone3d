@@ -1,0 +1,37 @@
+{
+  "public": {
+    "appName": "DICOM Viewer v3",
+    "version": "1.0.0",
+    "dicom": {
+      "memoryLimit": "512MB",
+      "prefetchStrategy": "balanced",
+      "enableGPU": true,
+      "workerCount": 4,
+      "concurrentRequests": 6
+    },
+    "cache": {
+      "maxSizeMB": 2048,
+      "ttlHours": 168,
+      "cleanupIntervalHours": 24
+    },
+    "performance": {
+      "enableMonitoring": true,
+      "metricsInterval": 60
+    },
+    "pwa": {
+      "enableServiceWorker": true
+    }
+  },
+  "private": {
+    "cors": {
+      "enable": true,
+      "origin": "http://localhost:3000,http://localhost:4000"
+    },
+    "cleanup": {
+      "enabled": true,
+      "intervalHours": 6,
+      "maxFileAgeHours": 168,
+      "maxSessionAgeHours": 24
+    }
+  }
+}

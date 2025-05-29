@@ -1,0 +1,31 @@
+{
+  "name": "DICOM Viewer v3",
+  "short_name": "DICOM Viewer",
+  "description": "High-performance medical imaging viewer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e1e1e",
+  "theme_color": "#1976d2",
+  "orientation": "landscape-primary",
+  "categories": ["medical", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-1.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "form_factor": "wide"
+    }
+  ]
+}

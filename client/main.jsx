@@ -23,7 +23,7 @@ Meteor.startup(function() {
   const container = document.getElementById('react-target');
   if (container) {
     const root = createRoot(container);
-    root.render(<App />);
+    root.render(React.createElement(App));
     console.log('✅ DICOM Viewer v3 Client Ready');
   } else {
     console.error('❌ React mount point not found');
