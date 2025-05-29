@@ -83,6 +83,11 @@ export function isServiceWorkerSupported() {
 
 // Initialize service worker when module loads
 Meteor.startup(async function() {
+
+  // DISABLED FOR DEBUGGING - the service worker is causing fetch errors
+  console.log('📦 Service worker registration disabled for debugging');
+  return;
+
   const settings = Meteor.settings.public;
   const enableServiceWorker = settings?.pwa?.enableServiceWorker !== false;
   

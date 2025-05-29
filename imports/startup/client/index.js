@@ -3,14 +3,14 @@ import { Meteor } from 'meteor/meteor';
 // Initialize Cornerstone3D
 import { initializeCornerstone3D } from './cornerstone3d-setup';
 
-// Initialize memory management
-import './memory-manager';
+// // Initialize memory management
+// import './memory-manager';
 
-// Initialize IndexedDB
-import './indexeddb-setup';
+// // Initialize IndexedDB
+// import './indexeddb-setup';
 
-// Initialize service worker for PWA features
-import './service-worker-setup';
+// // Initialize service worker for PWA features
+// import './service-worker-setup';
 
 /**
  * Client startup initialization
