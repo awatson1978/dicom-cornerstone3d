@@ -1,26 +1,56 @@
 {
-  "name": "dicom-cornerstone3d",
+  "name": "dicom-viewer-v3",
+  "version": "1.0.0",
+  "description": "High-performance DICOM viewer built with Meteor v3, React, and Cornerstone3D",
   "private": true,
   "scripts": {
     "start": "meteor run",
+    "dev": "meteor run --port 3000",
+    "dev:debug": "meteor run --inspect --port 3000",
+    "build": "meteor build ../output --server-only",
+    "build:production": "meteor build ../output --server-only --architecture os.linux.x86_64",
     "test": "meteor test --once --driver-package meteortesting:mocha",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "test:watch": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "test:performance": "node scripts/benchmark.js",
+    "lint": "eslint imports/ client/ server/ --ext .js,.jsx",
+    "lint:fix": "eslint imports/ client/ server/ --ext .js,.jsx --fix",
+    "clean": "meteor reset && npm install",
+    "visualize": "meteor --production --extra-packages bundle-visualizer",
+    "setup": "./setup.sh",
+    "cache:clear": "node scripts/cache-cleanup.js"
   },
   "dependencies": {
-    "@babel/runtime": "^7.23.5",
-    "@cornerstonejs/codec-charls": "^1.2.3",
-    "@cornerstonejs/codec-libjpeg-turbo-8bit": "^1.2.2",
-    "@cornerstonejs/codec-openjpeg": "^1.2.4",
-    "@cornerstonejs/codec-openjph": "^2.4.7",
-    "@cornerstonejs/core": "^0.3.0",
-    "@cornerstonejs/dicom-image-loader": "^0.1.5",
-    "@cornerstonejs/tools": "^0.5.0",
+    "@babel/runtime": "^7.24.0",
+    "@cornerstonejs/core": "^1.78.0",
+    "@cornerstonejs/tools": "^1.78.0",
+    "@cornerstonejs/dicom-image-loader": "^1.78.0",
+    "@cornerstonejs/streaming-image-volume-loader": "^1.78.0",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@mui/styles": "^5.15.15",
+    "@mui/x-date-pickers": "^7.1.0",
     "dicom-parser": "^1.8.21",
-    "idb": "^8.0.3",
-    "meteor-node-stubs": "^1.2.7",
+    "lodash": "^4.17.21",
+    "meteor-node-stubs": "^1.2.9",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.13",
+    "react-dropzone": "^14.2.3",
+    "idb": "^8.0.0",
+    "comlink": "^4.4.1",
+    "uuid": "^9.0.1",
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-meteor": "^7.3.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.2.5"
   },
   "meteor": {
     "mainModule": {
@@ -28,5 +58,21 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
